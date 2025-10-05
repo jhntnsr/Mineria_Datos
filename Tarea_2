@@ -2,4 +2,20 @@ Jhonatan Simón 999010164
 
 Apriori: 3 Patrones encontrados
 
+datos_sector <-subset(datos, Sector == "Privado")
+data.frame(1:ncol(datos_sector),colnames(datos_sector))
+datos_sector <- datos_sector[,-7]
+reglas_7 <- apriori(datos_sector, parameter = list(support=0.2, confidence =0.5))
+inspect(reglas_7[0:27])
 
+datos_publico <-subset(datos, Sector == "Público")
+data.frame(1:ncol(datos_publico),colnames(datos_publico))
+datos_publico <- datos_publico[,-7]
+reglas_8 <- apriori(datos_publico, parameter = list(support=0.2, confidence =0.5))
+inspect(reglas_8[0:29])
+
+datos_grupos <-subset(datos, Grupos_Quinquenales == "20 a 24")
+data.frame(1:ncol(datos_grupos),colnames(datos_grupos))
+datos_grupos <- datos_grupos[,-5]
+reglas_9 <- apriori(datos_grupos, parameter = list(support=0.2, confidence =0.5))
+inspect(reglas_9[0:45])
