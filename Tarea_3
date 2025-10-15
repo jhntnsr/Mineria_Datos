@@ -2,4 +2,14 @@ Jhonatan Simón 999010164
 
 Algoritmo FP Growth: 3 Patrones encontrados
 
+data_fp_qn <- data[, c("QUIEN_REPORTA","HEC_DEPTO","VIC_EDAD","AGR_EDAD","VIC_TRABAJA","AGR_TRABAJA")]
+reglas_fp_qn <- fim4r(data_fp_qn, method = "fpgrowth", target = "rules", support = .2, confidence = .5)
+rf_qn <- as (reglas_fp_qn,"data.frame")
 
+data_fp_oc <- data[, c("INST_DENUN_HECHO","VIC_OCUP","AGR_OCUP","VIC_GRUPET")]
+reglas_fp_oc <- fim4r(data_fp_oc, method = "fpgrowth", target = "rules", support = .2, confidence = .5)
+rf_oc <- as (reglas_fp_oc,"data.frame")
+
+data_fp_ocu <- data[, c("AGR_OCUP","AGR_EST_CIV","HEC_DEPTO","HEC_MES","HEC_TIPAGRE")]
+reglas_fp_ocu <- fim4r(data_fp_ocu, method = "fpgrowth", target = "rules", support = .2, confidence = .5)
+rf_ocu <- as (reglas_fp_ocu,"data.frame")
