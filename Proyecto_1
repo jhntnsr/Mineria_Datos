@@ -72,3 +72,34 @@ names(m_2009_2024)
 # --- Verificar Data Frames ---
 data.frame(1:ncol(d_2009_2024), colnames(d_2009_2024))
 data.frame(1:ncol(m_2009_2024), colnames(m_2009_2024))
+
+# -- Diccionario de las columnas en comun de 2009 a 2024 --
+Divorcios (d_2009_2024)
+Columna	Significado
+depreg	Departamento de registro
+mupreg	Municipio de registro
+mesreg	Mes de registro
+diaocu	Día de ocurrencia
+mesocu	Mes de ocurrencia
+depocu	Departamento de ocurrencia
+mupocu	Municipio de ocurrencia
+edadhom	Edad del hombre
+edadmuj	Edad de la mujer
+nachom	Nacionalidad del hombre
+nacmuj	Nacionalidad de la mujer
+
+# -- Matrimonios (m_2009_2024) --
+Columna	Significado
+depreg	Departamento de registro
+mupreg	Municipalidad de registro
+mesreg	Mes de registro
+a_oreg	Año de registro
+clauni	Clase de unión
+edadhom	Edad del hombre
+edadmuj	Edad de la mujer
+nachom	Nacionalidad del hombre
+nacmuj	Nacionalidad de la mujer
+depocu	Departamento de ocurrencia
+mupocu	Municipio de ocurrencia
+mesocu	Mes de ocurrencia
+
