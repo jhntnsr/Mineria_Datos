@@ -2,6 +2,16 @@
 **Autor:** Jhonatan Simon  
 **ID:** 999010164  
 
+## Documentos descargados de:
+https://www.ine.gob.gt/vitales/
+https://datos.ine.gob.gt/dataset/estadisticas-vitales-matrimonios
+https://datos.ine.gob.gt/dataset/estadisticas-vitales-divorcios
+---
+
+## Formato de nombre:
+
+Descargar documentos .sav y .xlsx y nombrarlos como: Matriominios_YYYY o Divorcios_YYYY
+
 ---
 
 ## Librerías utilizadas
