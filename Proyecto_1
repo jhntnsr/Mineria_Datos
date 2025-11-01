@@ -158,7 +158,7 @@ mesocu  | Mes de ocurrencia
 
 ## Reglas de Asociación (Apriori)
 
-### Divorcios
+### Regla Divorcios
 
 ```r
 library(arules)
@@ -166,7 +166,7 @@ regla <- apriori(d_2009_2024, parameter = list(support = 0.2, confidence = 0.5))
 inspect(regla[0:200])
 ```
 
-### Matrimonios
+### Regla Matrimonios
 
 ```r
 regla_m <- apriori(m_2009_2024, parameter = list(support = 0.2, confidence = 0.5))
