@@ -73,7 +73,7 @@ names(m_2009_2024)
 data.frame(1:ncol(d_2009_2024), colnames(d_2009_2024))
 data.frame(1:ncol(m_2009_2024), colnames(m_2009_2024))
 
-# -- Diccionario de las columnas en comun de 2009 a 2024 --
+# --- Diccionario de las columnas en comun de 2009 a 2024 --
 Divorcios (d_2009_2024)
 Columna	Significado
 depreg	Departamento de registro
@@ -88,7 +88,7 @@ edadmuj	Edad de la mujer
 nachom	Nacionalidad del hombre
 nacmuj	Nacionalidad de la mujer
 
-# -- Matrimonios (m_2009_2024) --
+# --- Matrimonios (m_2009_2024) --
 Columna	Significado
 depreg	Departamento de registro
 mupreg	Municipalidad de registro
@@ -103,3 +103,11 @@ depocu	Departamento de ocurrencia
 mupocu	Municipio de ocurrencia
 mesocu	Mes de ocurrencia
 
+#--- Crear Regla de Apriori para divorcios --
+library(arules)
+regla <- apriori(d_2009_2024, parameter = list(support=0.2, confidence =0.5))
+inspect(regla[0:200])
+
+# --- Crear Regla de Apriori para Matrimonios ---
+regla_m <- apriori(m_2009_2024, parameter = list(support=0.2, confidence =0.5))
+inspect(regla_m[0:432])
