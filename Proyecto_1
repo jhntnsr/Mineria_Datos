@@ -54,6 +54,10 @@ convertir_labelled <- function(df) {
 
 ## Carga de datos
 
+Path Utilizado:
+D:/Documentos/Maestria/Introduccion a la Mineria de Datos/Proyecto_1/
+Remplazar path anterior con con path local
+
 ### Crear lista de dataframes para divorcios y matrimonios
 
 ```r
