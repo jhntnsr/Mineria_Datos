@@ -20,6 +20,9 @@ Descargar documentos .sav y .xlsx y nombrarlos como: Matriominios_YYYY o Divorci
 library(haven)   # Para leer archivos .sav
 library(readxl)  # Para leer archivos .xlsx
 library(dplyr)   # Para manipulación de datos
+library(ggplot2) # Para graficar
+library(fim4r)   # Para utilizar FPGrowth
+library(arules)  # Para utilizar Apriori
 ```
 
 ---
@@ -175,7 +178,7 @@ mesocu  | Mes de ocurrencia
 ### Regla Divorcios
 
 ```r
-library(arules)
+
 regla <- apriori(d_2009_2024, parameter = list(support = 0.2, confidence = 0.5))
 inspect(regla[0:200])
 ```
@@ -186,3 +189,72 @@ inspect(regla[0:200])
 regla_m <- apriori(m_2009_2024, parameter = list(support = 0.2, confidence = 0.5))
 inspect(regla_m[0:432])
 ```
+
+--- 
+
+## Reglas de Asociación (PF-Growth)
+
+### Divorcios
+
+```r
+
+dfp_2009_2024 <- d_2009_2024
+reglad_fp <- fim4r(dfp_2009_2024, method = "fpgrowth", target = "rules", supp = 0.2, conf = 0.5)
+
+rd <- as(reglad_fp, "data.frame")
+
+data.frame(1:ncol(dfp_2009_2024), colnames(dfp_2009_2024))
+inspect(reglad_fp[0:200])
+
+
+mfp_2009_2024 <- m_2009_2024
+reglam_fp <- fim4r(mfp_2009_2024, method = "fpgrowth", target = "rules", supp = 0.2, conf = 0.5)
+
+rm <- as(reglam_fp, "data.frame")
+
+data.frame(1:ncol(mfp_2009_2024), colnames(mfp_2009_2024))
+inspect(reglam_fp[0:432])
+
+# Preparar datasets (solo columnas numéricas)
+m_data <- m_2009_2024[, c("edadhom", "edadmuj")]
+d_data <- d_2009_2024[, c("edadhom", "edadmuj")]
+
+# Convertir a numérico (por si hay factores)
+m_data[] <- lapply(m_data, function(x) as.numeric(as.character(x)))
+d_data[] <- lapply(d_data, function(x) as.numeric(as.character(x)))
+
+# Reemplazar NA, NaN, Inf por -1
+m_data[!is.finite(as.matrix(m_data))] <- -1
+d_data[!is.finite(as.matrix(d_data))] <- -1
+
+# Aplicar K-means
+set.seed(123)  # reproducibilidad
+cluster_m <- kmeans(m_data, centers = 2)
+cluster_d <- kmeans(d_data, centers = 2)
+
+# Agregar la asignación de clusters al dataframe
+m_data$cluster <- as.factor(cluster_m$cluster)
+d_data$cluster <- as.factor(cluster_d$cluster)
+
+# Graficar resultados para matrimonios
+ggplot(m_data, aes(x = edadhom, y = edadmuj, color = cluster)) +
+  geom_point() +
+  geom_point(
+    data = as.data.frame(cluster_m$centers),
+    aes(x = edadhom, y = edadmuj),
+    color = "black", size = 4, shape = 17
+  ) +
+  labs(title = "K-means: Edad Mujer vs Edad Hombre (m_2009_2024)") +
+  theme_minimal()
+
+# Graficar resultados para divorcios
+ggplot(d_data, aes(x = edadhom, y = edadmuj, color = cluster)) +
+  geom_point() +
+  geom_point(
+    data = as.data.frame(cluster_d$centers),
+    aes(x = edadhom, y = edadmuj),
+    color = "black", size = 4, shape = 17
+  ) +
+  labs(title = "K-means: Edad Mujer vs Edad Hombre (d_2009_2024)") +
+  theme_minimal()
+
