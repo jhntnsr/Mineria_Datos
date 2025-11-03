@@ -2,15 +2,33 @@
 **Autor:** Jhonatan Simon  
 **ID:** 999010164  
 
-## Documentos descargados de:
-https://www.ine.gob.gt/vitales/
-https://datos.ine.gob.gt/dataset/estadisticas-vitales-matrimonios
-https://datos.ine.gob.gt/dataset/estadisticas-vitales-divorcios
 ---
 
-## Formato de nombre:
+## Requisitos del entorno
+- **R versión:** 4.3 o superior  
+- **Entorno recomendado:** RStudio  
+- **Sistema operativo:** Windows, Linux o macOS  
+- **Conexión a internet:** necesaria para descargar los archivos del INE  
 
-Descargar documentos .sav y .xlsx y nombrarlos como: Matriominios_YYYY o Divorcios_YYYY
+---
+
+## Documentos descargados de:
+- https://www.ine.gob.gt/vitales/  
+- https://datos.ine.gob.gt/dataset/estadisticas-vitales-matrimonios  
+- https://datos.ine.gob.gt/dataset/estadisticas-vitales-divorcios  
+
+---
+
+## Formato de nombre de archivos
+
+Descargar los documentos en formato `.sav` y `.xlsx`, y nombrarlos de la siguiente forma:
+
+```
+Matrimonios_YYYY
+Divorcios_YYYY
+```
+
+donde `YYYY` representa el año correspondiente (2009–2024).
 
 ---
 
@@ -27,7 +45,7 @@ library(arules)  # Para utilizar Apriori
 
 ---
 
-## 🔧 Funciones auxiliares
+## Funciones auxiliares
 
 ### Limpiar nombres de columnas
 
@@ -57,9 +75,12 @@ convertir_labelled <- function(df) {
 
 ## Carga de datos
 
-Path Utilizado:
+**Ruta utilizada (modificar según entorno local):**  
+```
 D:/Documentos/Maestria/Introduccion a la Mineria de Datos/Proyecto_1/
-Remplazar path anterior con con path local
+```
+
+Reemplazar esta ruta con la ubicación local donde se almacenaron los archivos descargados.
 
 ### Crear lista de dataframes para divorcios y matrimonios
 
@@ -142,119 +163,133 @@ data.frame(1:ncol(m_2009_2024), colnames(m_2009_2024))
 
 Columna | Significado
 --------|-----------------------------
-depreg  | Departamento de registro
-mupreg  | Municipio de registro
-mesreg  | Mes de registro
-diaocu  | Día de ocurrencia
-mesocu  | Mes de ocurrencia
-depocu  | Departamento de ocurrencia
-mupocu  | Municipio de ocurrencia
-edadhom | Edad del hombre
-edadmuj | Edad de la mujer
-nachom  | Nacionalidad del hombre
-nacmuj  | Nacionalidad de la mujer
+depreg  | Departamento de registro  
+mupreg  | Municipio de registro  
+mesreg  | Mes de registro  
+diaocu  | Día de ocurrencia  
+mesocu  | Mes de ocurrencia  
+depocu  | Departamento de ocurrencia  
+mupocu  | Municipio de ocurrencia  
+edadhom | Edad del hombre  
+edadmuj | Edad de la mujer  
+nachom  | Nacionalidad del hombre  
+nacmuj  | Nacionalidad de la mujer  
 
 ### Matrimonios (`m_2009_2024`)
 
 Columna | Significado
 --------|-----------------------------
-depreg  | Departamento de registro
-mupreg  | Municipalidad de registro
-mesreg  | Mes de registro
-a_oreg  | Año de registro
-clauni  | Clase de unión
-edadhom | Edad del hombre
-edadmuj | Edad de la mujer
-nachom  | Nacionalidad del hombre
-nacmuj  | Nacionalidad de la mujer
-depocu  | Departamento de ocurrencia
-mupocu  | Municipio de ocurrencia
-mesocu  | Mes de ocurrencia
+depreg  | Departamento de registro  
+mupreg  | Municipalidad de registro  
+mesreg  | Mes de registro  
+a_oreg  | Año de registro  
+clauni  | Clase de unión  
+edadhom | Edad del hombre  
+edadmuj | Edad de la mujer  
+nachom  | Nacionalidad del hombre  
+nacmuj  | Nacionalidad de la mujer  
+depocu  | Departamento de ocurrencia  
+mupocu  | Municipio de ocurrencia  
+mesocu  | Mes de ocurrencia  
 
 ---
 
 ## Reglas de Asociación (Apriori)
 
-### Regla Divorcios
+### Divorcios
 
 ```r
-
 regla <- apriori(d_2009_2024, parameter = list(support = 0.2, confidence = 0.5))
 inspect(regla[0:200])
 ```
 
-### Regla Matrimonios
+### Matrimonios
 
 ```r
 regla_m <- apriori(m_2009_2024, parameter = list(support = 0.2, confidence = 0.5))
 inspect(regla_m[0:432])
 ```
 
---- 
+---
 
-## Reglas de Asociación (PF-Growth)
+## Reglas de Asociación (FP-Growth)
 
-### Divorcios
+### Divorcios y Matrimonios
 
 ```r
-
 dfp_2009_2024 <- d_2009_2024
 reglad_fp <- fim4r(dfp_2009_2024, method = "fpgrowth", target = "rules", supp = 0.2, conf = 0.5)
-
 rd <- as(reglad_fp, "data.frame")
-
-data.frame(1:ncol(dfp_2009_2024), colnames(dfp_2009_2024))
 inspect(reglad_fp[0:200])
-
 
 mfp_2009_2024 <- m_2009_2024
 reglam_fp <- fim4r(mfp_2009_2024, method = "fpgrowth", target = "rules", supp = 0.2, conf = 0.5)
-
 rm <- as(reglam_fp, "data.frame")
-
-data.frame(1:ncol(mfp_2009_2024), colnames(mfp_2009_2024))
 inspect(reglam_fp[0:432])
+```
 
-# Preparar datasets (solo columnas numéricas)
+---
+
+## Análisis de Clúster (K-means)
+
+```r
+# Preparar datasets
 m_data <- m_2009_2024[, c("edadhom", "edadmuj")]
 d_data <- d_2009_2024[, c("edadhom", "edadmuj")]
 
-# Convertir a numérico (por si hay factores)
+# Convertir a numérico y limpiar
 m_data[] <- lapply(m_data, function(x) as.numeric(as.character(x)))
 d_data[] <- lapply(d_data, function(x) as.numeric(as.character(x)))
-
-# Reemplazar NA, NaN, Inf por -1
 m_data[!is.finite(as.matrix(m_data))] <- -1
 d_data[!is.finite(as.matrix(d_data))] <- -1
 
 # Aplicar K-means
-set.seed(123)  # reproducibilidad
+set.seed(123)
 cluster_m <- kmeans(m_data, centers = 2)
 cluster_d <- kmeans(d_data, centers = 2)
 
-# Agregar la asignación de clusters al dataframe
+# Asignar clusters
 m_data$cluster <- as.factor(cluster_m$cluster)
 d_data$cluster <- as.factor(cluster_d$cluster)
 
-# Graficar resultados para matrimonios
+# Graficar matrimonios
 ggplot(m_data, aes(x = edadhom, y = edadmuj, color = cluster)) +
   geom_point() +
-  geom_point(
-    data = as.data.frame(cluster_m$centers),
-    aes(x = edadhom, y = edadmuj),
-    color = "black", size = 4, shape = 17
-  ) +
-  labs(title = "K-means: Edad Mujer vs Edad Hombre (m_2009_2024)") +
+  geom_point(data = as.data.frame(cluster_m$centers),
+             aes(x = edadhom, y = edadmuj),
+             color = "black", size = 4, shape = 17) +
+  labs(title = "K-means: Edad Mujer vs Edad Hombre (Matrimonios 2009–2024)") +
   theme_minimal()
 
-# Graficar resultados para divorcios
+# Graficar divorcios
 ggplot(d_data, aes(x = edadhom, y = edadmuj, color = cluster)) +
   geom_point() +
-  geom_point(
-    data = as.data.frame(cluster_d$centers),
-    aes(x = edadhom, y = edadmuj),
-    color = "black", size = 4, shape = 17
-  ) +
-  labs(title = "K-means: Edad Mujer vs Edad Hombre (d_2009_2024)") +
+  geom_point(data = as.data.frame(cluster_d$centers),
+             aes(x = edadhom, y = edadmuj),
+             color = "black", size = 4, shape = 17) +
+  labs(title = "K-means: Edad Mujer vs Edad Hombre (Divorcios 2009–2024)") +
   theme_minimal()
+```
+
+---
+
+## Interpretación esperada
+
+- Los **clústeres** representan agrupaciones por edad promedio entre hombres y mujeres.  
+- En los matrimonios, los puntos cercanos a los centros indican rangos de edad más comunes al casarse.  
+- En los divorcios, la dispersión puede reflejar mayores diferencias o variabilidad entre edades.  
+- Las **reglas de asociación (Apriori y FP-Growth)** ayudan a identificar patrones frecuentes en los registros de matrimonios y divorcios, según las variables categóricas comunes.
+
+---
+
+## Cómo ejecutar el proyecto
+
+1. Descargar los archivos `.sav` y `.xlsx` desde los enlaces del INE.  
+2. Guardarlos en una carpeta local y nombrarlos según el formato indicado.  
+3. Actualizar la ruta (`path`) en el script con la ubicación local.  
+4. Ejecutar todo el script en RStudio (por secciones o completo).  
+5. Observar los resultados en consola y las gráficas generadas.  
+
+---
+
 
