@@ -1,1 +1,36 @@
+Jhonatan Simón 999010164
 
+Algoritmo de Árboles de decisión
+
+
+library(readxl)
+
+data <- read_excel("D:\\Documentos\\Maestria\\Introduccion a la Mineria de Datos\\base-de-datos-violencia-intrafamiliar-ano-2024_v3.xlsx")
+
+install.packages("rpart")
+install.packages("rpart.plot")
+
+library(rpart)
+library(rpart.plot)
+
+arbolt4 <- rpart(VIC_TRABAJA ~ 
+                 VIC_SEXO +
+                 VIC_EDAD +
+                 VIC_DEDICA +
+                 VIC_ESCOLARIDAD,
+               data = data, method = "class"
+)
+
+rpart.plot(arbolt4, type=2, extra=0, under= TRUE, fallen.leaves= TRUE, box.palette = "BuGn",
+           main="Ciudad o No", cex=0.5)
+
+persona <- data.frame(
+  VIC_SEXO =c(1),
+  VIC_EDAD =c(25),
+  VIC_TRABAJA =c(1),
+  VIC_DEDICA =c(3),
+  VIC_ESCOLARIDAD =c(31)
+)
+
+result <- predict(arbolt4, persona, type ="prob" )
+result
