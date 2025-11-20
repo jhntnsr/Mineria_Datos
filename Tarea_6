@@ -14,6 +14,8 @@ library(randomForest)
 
 dataf$HEC_DEPTO <- as.factor(dataf$HEC_DEPTO)
 
+dataf <- na.omit(dataf)
+
 set.seed(100)
 
 dataf <- dataf[sample(1:nrow(dataf)),]
@@ -22,3 +24,24 @@ index  <- sample(1:nrow(dataf),0.8*nrow(dataf))
 
 train <- dataf[index,]
 test <- dataf[-index,]
+
+
+
+forest <- randomForest (HEC_DEPTO ~ 
+                  VIC_EDAD +
+                  VIC_ESCOLARIDAD +
+                  VIC_TRABAJA +
+                  VIC_OCUP,
+                data = train, 
+                ntree = 100,
+                mtry = 4
+                        )
+
+prueba <- predict (forest,test)
+prueba
+
+matriz <- table(test$HEC_DEPTO, prueba)
+matriz
+
+pre <- sum(diag(matriz))/sum(matriz)
+pre
