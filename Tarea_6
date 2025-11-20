@@ -1,3 +1,24 @@
 Jhonatan Simón 999010164
 
 Algoritmo de Árboles de decisión
+
+library(readxl)
+
+data <- read_excel("D:\\Documentos\\Maestria\\Introduccion a la Mineria de Datos\\base-de-datos-violencia-intrafamiliar-ano-2024_v3.xlsx")
+
+dataf <- data [,c("HEC_DEPTO","VIC_EDAD","VIC_ESCOLARIDAD","VIC_TRABAJA","VIC_OCUP")]
+
+install.packages("randomForest")
+
+library(randomForest)
+
+dataf$HEC_DEPTO <- as.factor(dataf$HEC_DEPTO)
+
+set.seed(100)
+
+dataf <- dataf[sample(1:nrow(dataf)),]
+
+index  <- sample(1:nrow(dataf),0.8*nrow(dataf))
+
+train <- dataf[index,]
+test <- dataf[-index,]
