@@ -1,18 +1,18 @@
 Jhonatan Simón 999010164
 
-Algoritmo de Árboles de decisión
+Análisis Predictivo de Sexo de la Víctima mediante Random Forest
 
 library(readxl)
 
 data <- read_excel("D:\\Documentos\\Maestria\\Introduccion a la Mineria de Datos\\base-de-datos-violencia-intrafamiliar-ano-2024_v3.xlsx")
 
-dataf <- data [,c("HEC_DEPTO","VIC_EDAD","VIC_ESCOLARIDAD","VIC_TRABAJA","VIC_OCUP")]
+dataf <- data [,c("VIC_SEXO","VIC_EDAD","VIC_ALFAB","VIC_TRABAJA","VIC_DEDICA")]
 
 install.packages("randomForest")
 
 library(randomForest)
 
-dataf$HEC_DEPTO <- as.factor(dataf$HEC_DEPTO)
+dataf$VIC_SEXO <- as.factor(dataf$VIC_SEXO)
 
 dataf <- na.omit(dataf)
 
@@ -27,11 +27,11 @@ test <- dataf[-index,]
 
 
 
-forest <- randomForest (HEC_DEPTO ~ 
+forest <- randomForest (VIC_SEXO ~ 
                   VIC_EDAD +
-                  VIC_ESCOLARIDAD +
+                  VIC_ALFAB +
                   VIC_TRABAJA +
-                  VIC_OCUP,
+                  VIC_DEDICA,
                 data = train, 
                 ntree = 100,
                 mtry = 4
@@ -40,8 +40,20 @@ forest <- randomForest (HEC_DEPTO ~
 prueba <- predict (forest,test)
 prueba
 
-matriz <- table(test$HEC_DEPTO, prueba)
+matriz <- table(test$VIC_SEXO, prueba)
 matriz
 
 pre <- sum(diag(matriz))/sum(matriz)
 pre
+
+persona <- data.frame(
+  VIC_EDAD =c(18),
+  VIC_ALFAB =c(2),
+  VIC_TRABAJA =c(2),
+  VIC_DEDICA =c(4)
+)
+
+result <- predict(forest, persona, type ="prob" )
+result
+
+plot(forest)
