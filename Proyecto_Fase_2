@@ -2,3 +2,12 @@
 **Autor:** Jhonatan Simon  
 **ID:** 999010164  
 
+library(readxl)
+
+data <- read_excel("D:\\Documentos\\Maestria\\Introduccion a la Mineria de Datos\\base-de-datos-violencia-intrafamiliar-ano-2024_v3.xlsx")
+
+install.packages("rpart")
+install.packages("rpart.plot")
+
+library(rpart)
+library(rpart.plot)
