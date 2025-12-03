@@ -83,26 +83,25 @@ data.frame(1:ncol(d_2009_2024), colnames(d_2009_2024))
 data.frame(1:ncol(m_2009_2024), colnames(m_2009_2024))
 
 # --- Crear Arbol de edades bajas de los conyuges ---
-arboleb <- rpart(VIC_TRABAJA ~ 
-                   VIC_SEXO +
-                   VIC_EDAD +
-                   VIC_DEDICA +
-                   VIC_ESCOLARIDAD,
-                 data = data, method = "class"
+
+
+arbolcu <- rpart(clauni ~ 
+                   nachom +
+                   nacmuj+
+                   edadmuj +
+                   edadhom,
+                 data = m_2009_2024, method = "class"
 )
 
-rpart.plot(arbolt4, type=2, extra=0, under= TRUE, fallen.leaves= TRUE, box.palette = "BuGn",
-           main="Trabaja o No", cex=0.5)
+rpart.plot(arbolcu, type=2, extra=0, under= TRUE, fallen.leaves= TRUE, box.palette = "BuGn",
+           main="clase de union", cex=0.5)
 
-persona <- data.frame(
-  VIC_SEXO =c(2),
-  VIC_EDAD =c(25),
-  VIC_TRABAJA =c(1),
-  VIC_DEDICA =c(3),
-  VIC_ESCOLARIDAD =c(31)
+claseu <- data.frame(
+  edadmuj =c(50),
+  edadhom =c(60),
+  nachom =c(320),
+  nacmuj =c(320)
 )
 
-result <- predict(arbolt4, persona, type ="prob" )
+result <- predict(arbolcu, claseu, type ="prob" )
 result
-
-
