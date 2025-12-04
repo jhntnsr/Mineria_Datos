@@ -110,31 +110,42 @@ result
 # --- Crear Arbol para predecir mes de ocurrencia ---
 
 arbol_mesocu <- rpart(
-  mesocu ~ edadmuj + edadhom + nachom + nacmuj + depreg + mupreg + mesreg + a_oreg,
+  mesocu ~ edadmuj + edadhom + depreg + mupreg ,
   data = m_2009_2024,
   method = "class"
 )
 
-rpart.plot(
-  arbol_mesocu,
-  type = 2,
-  extra = 0,
-  under = TRUE,
-  fallen.leaves = TRUE,
-  box.palette = "Blues",
-  main = "Árbol de decisión para mesocu",
-  cex = 0.6
-)
+rpart.plot( arbol_mesocu,type = 2, extra = 0, under = TRUE, fallen.leaves = TRUE, box.palette = "BuGn",
+  main = "Árbol de decisión para mesocu",cex = 0.5)
 
 nuevo_mesocu <- data.frame(
   edadmuj = 40,
   edadhom = 45,
-  nachom = 320,
-  nacmuj = 320,
   depreg = 1,
   mupreg = 1,
-  mesreg = 5,
-  a_oreg = 2020
 )
 
-predict(arbol_mesocu, nuevo_mesocu, type="prob")
+resultmo <-predict(arbol_mesocu, nuevo_mesocu, type="prob")
+resultmo
+
+# --- Crear Arbol para predecir año de registro ---
+
+arbol_aoreg <- rpart(
+  a_oreg ~  depreg + mupreg + mesreg + depocu,
+  data = m_2009_2024,
+  method = "class"
+)
+
+rpart.plot( arbol_aoreg, type = 2, extra = 0, under = TRUE, fallen.leaves = TRUE, box.palette = "BuGn",
+  main = "Árbol de decisión para a_oreg", cex = 0.5
+)
+
+nuevo_aoreg <- data.frame(
+  depreg = 11,
+  mupreg = 2,
+  mesreg = 4,
+  depocu = 11,
+)
+
+resultaoreg = predict(arbol_aoreg, nuevo_aoreg, type="prob")
+resultaoreg
