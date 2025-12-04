@@ -84,7 +84,6 @@ data.frame(1:ncol(m_2009_2024), colnames(m_2009_2024))
 
 # --- Crear Arbol de edades bajas de los conyuges ---
 
-
 arbolcu <- rpart(clauni ~ 
                    nachom +
                    nacmuj+
@@ -106,7 +105,6 @@ claseu <- data.frame(
 result <- predict(arbolcu, claseu, type ="prob" )
 result
 
-
 # --- Crear Arbol para predecir mes de ocurrencia ---
 
 arbol_mesocu <- rpart(
@@ -127,6 +125,27 @@ nuevo_mesocu <- data.frame(
 
 resultmo <-predict(arbol_mesocu, nuevo_mesocu, type="prob")
 resultmo
+
+# --- Crear Arbol para predecir departamento de registro ---
+
+arbol_depreg <- rpart(
+  depreg ~ edadmuj + edadhom + nachom + nacmuj,
+  data = m_2009_2024,
+  method = "class"
+)
+
+rpart.plot( arbol_depreg, type = 2, extra = 0, under = TRUE, fallen.leaves = TRUE, box.palette = "Purples",
+  main = "Árbol de decisión para depreg", cex = 0.5 )
+
+nuevo_depreg <- data.frame(
+  edadmuj = 30,
+  edadhom = 35,
+  nachom = 320,
+  nacmuj = 320,
+)
+
+resultdep <- predict(arbol_depreg, nuevo_depreg, type="prob")
+resultdep
 
 # --- Crear Arbol para predecir año de registro ---
 
