@@ -105,3 +105,36 @@ claseu <- data.frame(
 
 result <- predict(arbolcu, claseu, type ="prob" )
 result
+
+
+# --- Crear Arbol para predecir mes de ocurrencia ---
+
+arbol_mesocu <- rpart(
+  mesocu ~ edadmuj + edadhom + nachom + nacmuj + depreg + mupreg + mesreg + a_oreg,
+  data = m_2009_2024,
+  method = "class"
+)
+
+rpart.plot(
+  arbol_mesocu,
+  type = 2,
+  extra = 0,
+  under = TRUE,
+  fallen.leaves = TRUE,
+  box.palette = "Blues",
+  main = "Árbol de decisión para mesocu",
+  cex = 0.6
+)
+
+nuevo_mesocu <- data.frame(
+  edadmuj = 40,
+  edadhom = 45,
+  nachom = 320,
+  nacmuj = 320,
+  depreg = 1,
+  mupreg = 1,
+  mesreg = 5,
+  a_oreg = 2020
+)
+
+predict(arbol_mesocu, nuevo_mesocu, type="prob")
